@@ -6,7 +6,7 @@ use walkdir::WalkDir;
 use crate::paths::{file_matches_icon, get_backup_dirs, get_icon_pack_path};
 
 #[derive(Debug, Clone)]
-struct IconFetcher {
+pub struct IconFetcher {
     /// Name of the icon pack
     icon_pack: Option<String>,
     /// Path of the icon pack

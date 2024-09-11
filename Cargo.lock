@@ -320,7 +320,7 @@ dependencies = [
 
 [[package]]
 name = "tux-icons"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "dirs 5.0.1",
  "freedesktop-desktop-entry",
