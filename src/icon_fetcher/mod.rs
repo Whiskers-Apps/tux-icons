@@ -36,8 +36,6 @@ fn get_system_icon_pack() -> String {
 fn get_target_path(path: impl Into<PathBuf>) -> Option<PathBuf> {
     let path: PathBuf = path.into();
 
-    println!("Is symlink: {}", path.is_symlink());
-
     if !path.is_symlink() {
         return Some(path);
     }
