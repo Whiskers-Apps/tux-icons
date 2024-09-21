@@ -42,6 +42,12 @@ You can also change the icon pack to get an icon from that specific one in case 
 fetcher.set_icon_pack("Papirus-Dark");
 ```
 
+## Get target path
+In case you want to get the target path from the icon file symlink instead of the symlink file
+```rust
+fetcher.set_return_target_path(true);
+```
+
 <a href="https://github.com/whiskers-apps/tux-icons/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=whiskers-apps/tux-icons" />
 </a>
