@@ -13,6 +13,8 @@ pub struct IconFetcher {
     icon_pack_path: Option<PathBuf>,
     /// Directories where icons should be if they are not on the icon pack
     backup_dirs: Vec<PathBuf>,
+    /// Returns the actual path in case of a symlink
+    return_target_path: bool,
 }
 
 fn get_system_icon_pack() -> String {
@@ -31,6 +33,24 @@ fn get_system_icon_pack() -> String {
     icon_pack
 }
 
+fn get_target_path(path: impl Into<PathBuf>) -> Option<PathBuf> {
+    let path: PathBuf = path.into();
+
+    if !path.is_symlink() {
+        return Some(path);
+    }
+
+    return if let Ok(link) = path.read_link() {
+        return if link.is_relative() {
+            Some(path.join(link))
+        } else {
+            Some(link)
+        };
+    } else {
+        None
+    };
+}
+
 impl IconFetcher {
     /// Inits the IconFetcher with the system icon pack
     pub fn new() -> Self {
@@ -45,6 +65,7 @@ impl IconFetcher {
                 None
             },
             backup_dirs: get_backup_dirs(),
+            return_target_path: false,
         }
     }
 
@@ -59,6 +80,12 @@ impl IconFetcher {
         self.clone()
     }
 
+    /// Returns the target path in case the icon path is a symlink
+    pub fn set_return_target_path(&mut self, return_target_path: bool) -> Self {
+        self.return_target_path = return_target_path;
+        self.clone()
+    }
+
     /// Returns the icon path given it's name.
     pub fn get_icon_path(self, icon_name: impl Into<String>) -> Option<PathBuf> {
         let icon_name: String = icon_name.into();
@@ -67,7 +94,11 @@ impl IconFetcher {
             for entry in WalkDir::new(&icon_pack_path).follow_links(true) {
                 if let Ok(entry) = entry {
                     if file_matches_icon(entry.path(), &icon_name) {
-                        return Some(entry.into_path());
+                        return if self.return_target_path {
+                            get_target_path(entry.into_path())
+                        } else {
+                            Some(entry.into_path())
+                        };
                     }
                 }
             }
@@ -77,7 +108,11 @@ impl IconFetcher {
             for entry in WalkDir::new(dir).follow_links(true) {
                 if let Ok(entry) = entry {
                     if file_matches_icon(entry.path(), &icon_name) {
-                        return Some(entry.into_path());
+                        return if self.return_target_path {
+                            get_target_path(entry.into_path())
+                        } else {
+                            Some(entry.into_path())
+                        };
                     }
                 }
             }

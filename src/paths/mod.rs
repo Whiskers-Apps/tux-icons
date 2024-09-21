@@ -12,7 +12,7 @@ pub fn get_backup_dirs() -> Vec<PathBuf> {
     local_pixmap.push(".local/share/icons/pixmaps");
 
     let usr_hicolor = PathBuf::from("/usr/share/icons/hicolor");
-    let usr_pixmap = PathBuf::from("/usr/share/icons/pixmaps");
+    let usr_pixmap = PathBuf::from("/usr/share/pixmaps");
 
     let mut dirs = Vec::<PathBuf>::new();
 

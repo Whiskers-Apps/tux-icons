@@ -1,9 +1,9 @@
 [package]
 name = "tux-icons"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2021"
 license = "MIT"
-description = "A library for getting icons in linux"
+description = "A library for getting desktop icons in linux"
 repository = "https://github.com/Whiskers-Apps/tux-icons"
 
 

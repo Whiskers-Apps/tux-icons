@@ -15,7 +15,7 @@ cargo add tux-icons
 Or add it manually in cargo.toml:
 ```toml
 [dependencies]
-tux-icons = "0.1.1"
+tux-icons = "0.2.0"
 ```
 
 # Usage
