@@ -74,27 +74,27 @@ impl IconFetcher {
     }
 
     /// Checks if the icon pack actually exists and sets the icon pack path accordingly
-    pub fn set_icon_pack(&mut self, name: impl Into<String>) -> Self {
+    pub fn set_icon_pack(mut self, name: impl Into<String>) -> Self {
         let name = name.into();
         let path = get_icon_pack_path(&name);
 
         self.icon_pack = Some(name);
         self.icon_pack_path = if let Some(p) = path { Some(p) } else { None };
 
-        self.clone()
+        self
     }
 
     /// Returns the target path in case the icon path is a symlink
-    pub fn set_return_target_path(&mut self, return_target_path: bool) -> Self {
+    pub fn set_return_target_path(mut self, return_target_path: bool) -> Self {
         self.return_target_path = return_target_path;
-        self.clone()
+        self
     }
 
     /// Returns the icon path given it's name.
-    pub fn get_icon_path(self, icon_name: impl Into<String>) -> Option<PathBuf> {
+    pub fn get_icon_path(&self, icon_name: impl Into<String>) -> Option<PathBuf> {
         let icon_name: String = icon_name.into();
 
-        if let Some(icon_pack_path) = self.icon_pack_path {
+        if let Some(icon_pack_path) = &self.icon_pack_path {
             for entry in WalkDir::new(&icon_pack_path).follow_links(true) {
                 if let Ok(entry) = entry {
                     if file_matches_icon(entry.path(), &icon_name) {
@@ -108,7 +108,7 @@ impl IconFetcher {
             }
         }
 
-        for dir in self.backup_dirs {
+        for dir in &self.backup_dirs {
             for entry in WalkDir::new(dir).follow_links(true) {
                 if let Ok(entry) = entry {
                     if file_matches_icon(entry.path(), &icon_name) {
@@ -126,7 +126,7 @@ impl IconFetcher {
     }
 
     /// Gets the icon path given the desktop file path
-    pub fn get_icon_path_from_desktop(self, path: impl Into<PathBuf>) -> Option<PathBuf> {
+    pub fn get_icon_path_from_desktop(&self, path: impl Into<PathBuf>) -> Option<PathBuf> {
         let path = path.into();
 
         if let Ok(bytes) = fs::read_to_string(&path) {
