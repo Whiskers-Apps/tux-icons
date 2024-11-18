@@ -14,6 +14,9 @@ pub fn get_backup_dirs() -> Vec<PathBuf> {
     let usr_hicolor = PathBuf::from("/usr/share/icons/hicolor");
     let usr_pixmap = PathBuf::from("/usr/share/pixmaps");
 
+    let flatpak_apps = PathBuf::from("/var/lib/flatpak/app/");
+    let home_flatpak_apps = home_dir.join(".local/share/flatpak");
+
     let mut dirs = Vec::<PathBuf>::new();
 
     if local_hicolor.exists() {
@@ -30,6 +33,14 @@ pub fn get_backup_dirs() -> Vec<PathBuf> {
 
     if usr_pixmap.exists() {
         dirs.push(usr_pixmap);
+    }
+
+    if flatpak_apps.exists(){
+        dirs.push(flatpak_apps);
+    }
+
+    if home_flatpak_apps.exists(){
+        dirs.push(home_flatpak_apps);
     }
 
     dirs
