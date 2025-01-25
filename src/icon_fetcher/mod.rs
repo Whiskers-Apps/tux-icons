@@ -161,4 +161,15 @@ impl IconFetcher {
 
         None
     }
+
+    /// Returns the directories that may have the icons
+    pub fn get_dirs(&self) -> Vec<PathBuf> {
+        let mut dirs = self.backup_dirs.clone();
+
+        if let Some(path) = self.icon_pack_path.clone() {
+            dirs.push(path);
+        }
+
+        return dirs;
+    }
 }
