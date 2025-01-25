@@ -42,9 +42,9 @@ fn get_target_path(path: impl Into<PathBuf>) -> Option<PathBuf> {
 
     return if let Ok(link) = path.read_link() {
         return if link.is_relative() {
-            if let Some(parent) = path.parent(){
+            if let Some(parent) = path.parent() {
                 Some(parent.join(link))
-            }else{
+            } else {
                 None
             }
         } else {
@@ -93,16 +93,26 @@ impl IconFetcher {
     /// Returns the icon path given it's name.
     pub fn get_icon_path(&self, icon_name: impl Into<String>) -> Option<PathBuf> {
         let icon_name: String = icon_name.into();
+        let image_formats = vec![
+            "apng", "png", "avif", "gif", "jpg", "jpeg", "jfif", "pjpeg", "pjp", "svg", "apng",
+            "webp", "bmp", "ico", "cur", "tif", "tiff",
+        ];
 
         if let Some(icon_pack_path) = &self.icon_pack_path {
             for entry in WalkDir::new(&icon_pack_path).follow_links(true) {
                 if let Ok(entry) = entry {
-                    if file_matches_icon(entry.path(), &icon_name) {
-                        return if self.return_target_path {
-                            get_target_path(entry.into_path())
-                        } else {
-                            Some(entry.into_path())
-                        };
+                    if let Some(extension) = entry.path().extension() {
+                        let extension_str: String = extension.to_string_lossy().into();
+
+                        if image_formats.iter().any(|e| e == &extension_str) {
+                            if file_matches_icon(entry.path(), &icon_name) {
+                                return if self.return_target_path {
+                                    get_target_path(entry.into_path())
+                                } else {
+                                    Some(entry.into_path())
+                                };
+                            }
+                        }
                     }
                 }
             }
@@ -111,12 +121,18 @@ impl IconFetcher {
         for dir in &self.backup_dirs {
             for entry in WalkDir::new(dir).follow_links(true) {
                 if let Ok(entry) = entry {
-                    if file_matches_icon(entry.path(), &icon_name) {
-                        return if self.return_target_path {
-                            get_target_path(entry.into_path())
-                        } else {
-                            Some(entry.into_path())
-                        };
+                    if let Some(extension) = entry.path().extension() {
+                        let extension_str: String = extension.to_string_lossy().into();
+
+                        if image_formats.iter().any(|e| e == &extension_str) {
+                            if file_matches_icon(entry.path(), &icon_name) {
+                                return if self.return_target_path {
+                                    get_target_path(entry.into_path())
+                                } else {
+                                    Some(entry.into_path())
+                                };
+                            }
+                        }
                     }
                 }
             }
