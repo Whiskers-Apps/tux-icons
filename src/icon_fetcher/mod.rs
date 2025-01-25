@@ -1,4 +1,8 @@
-use std::{fs, path::PathBuf, process::Command};
+use std::{
+    fs::{self},
+    path::{Path, PathBuf},
+    process::Command,
+};
 
 use freedesktop_desktop_entry::DesktopEntry;
 use walkdir::WalkDir;
@@ -130,6 +134,52 @@ impl IconFetcher {
                                     get_target_path(entry.into_path())
                                 } else {
                                     Some(entry.into_path())
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Some icons might be just in /usr/share/icons like the aur vscode
+        if let Ok(entries) = fs::read_dir(Path::new("/usr/share/icons")) {
+            for entry in entries {
+                if let Ok(entry) = entry {
+                    if let Some(extension) = entry.path().extension() {
+                        let extension_str: String = extension.to_string_lossy().into();
+
+                        if image_formats.iter().any(|e| e == &extension_str) {
+                            if file_matches_icon(entry.path(), &icon_name) {
+                                return if self.return_target_path {
+                                    get_target_path(entry.path())
+                                } else {
+                                    Some(entry.path())
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Same but for local share icons
+        if let Ok(entries) = fs::read_dir(
+            dirs::home_dir()
+                .unwrap_or(PathBuf::new())
+                .join(".local/share/icons"),
+        ) {
+            for entry in entries {
+                if let Ok(entry) = entry {
+                    if let Some(extension) = entry.path().extension() {
+                        let extension_str: String = extension.to_string_lossy().into();
+
+                        if image_formats.iter().any(|e| e == &extension_str) {
+                            if file_matches_icon(entry.path(), &icon_name) {
+                                return if self.return_target_path {
+                                    get_target_path(entry.path())
+                                } else {
+                                    Some(entry.path())
                                 };
                             }
                         }
