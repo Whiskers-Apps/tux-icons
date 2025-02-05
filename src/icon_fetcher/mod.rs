@@ -98,8 +98,8 @@ impl IconFetcher {
     pub fn get_icon_path(&self, icon_name: impl Into<String>) -> Option<PathBuf> {
         let icon_name: String = icon_name.into();
         let image_formats = vec![
-            "apng", "png", "avif", "gif", "jpg", "jpeg", "jfif", "pjpeg", "pjp", "svg", "apng",
-            "webp", "bmp", "ico", "cur", "tif", "tiff",
+            "apng", "png", "avif", "gif", "jpg", "jpeg", "jfif", "pjpeg", "pjp", "svg", "svgz",
+            "apng", "webp", "bmp", "ico", "cur", "tif", "tiff",
         ];
 
         if let Some(icon_pack_path) = &self.icon_pack_path {
