@@ -59,7 +59,9 @@ cargo install
 
 Or you can install by download the binary in the releases
 
+<a href="https://github.com/Whiskers-Apps/tux-icons/releases">
 <img src="./download-button.svg" width="200">
+</a>
 
 ## Usage
 To use this it's as simple as running `search-icon` and icon name and `from-desktop` with .desktop file.
