@@ -47,12 +47,12 @@ fn get_target_path(path: impl Into<PathBuf>) -> Option<PathBuf> {
     return if let Ok(link) = path.read_link() {
         return if link.is_relative() {
             if let Some(parent) = path.parent() {
-                Some(parent.join(link))
+                Some(parent.join(link).canonicalize().unwrap())
             } else {
                 None
             }
         } else {
-            Some(link)
+            Some(link.canonicalize().ok().unwrap())
         };
     } else {
         None
