@@ -194,18 +194,15 @@ impl IconFetcher {
     /// Gets the icon path given the desktop file path
     pub fn get_icon_path_from_desktop(&self, path: impl Into<PathBuf>) -> Option<PathBuf> {
         let path = path.into();
+        let entry = DesktopEntry::from_path(&path, None::<&[&str]>).ok()?;
 
-        if let Ok(bytes) = fs::read_to_string(&path) {
-            if let Ok(entry) = DesktopEntry::decode(&path, &bytes) {
-                if let Some(icon) = entry.icon() {
-                    let icon_path = PathBuf::from(&icon);
+        if let Some(icon) = entry.icon() {
+            let icon_path = PathBuf::from(&icon);
 
-                    if icon_path.exists() && icon_path.is_file() {
-                        return Some(icon_path);
-                    } else {
-                        return self.get_icon_path(icon);
-                    }
-                }
+            if icon_path.exists() && icon_path.is_file() {
+                return Some(icon_path);
+            } else {
+                return self.get_icon_path(icon);
             }
         }
 
