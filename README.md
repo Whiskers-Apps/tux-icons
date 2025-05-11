@@ -54,7 +54,7 @@ fetcher.set_return_target_path(true);
 ## Install
 To install it you can run 
 ```bash
-cargo install 
+cargo install tux-icons
 ```
 
 Or you can install by download the binary in the releases
