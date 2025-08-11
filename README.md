@@ -1,9 +1,3 @@
-<div align="center">
-
-<img src="./banner.svg">
-
-</div>
-
 # About
 Tux-Icons is a library for getting icons from an icon pack in linux. You can search using the icon pack and the icon name or just simply getting it from the desktop file.  
 
